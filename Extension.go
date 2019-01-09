@@ -9,14 +9,14 @@ type VirtualMachine exec.VirtualMachine
 
 // Extension is an Extension that runs in go (or via cgo). You can use this to define native behavior
 type Extension interface {
-	Run(*exec.VirtualMachine) int64
+	Run(*VirtualMachine) int64
 }
 
 // ExtensionFunc are simple functions that implements a module behaviour
-type ExtensionFunc func(vm *exec.VirtualMachine) int64
+type ExtensionFunc func(vm *VirtualMachine) int64
 
 // Run implements the resolver
-func (r ExtensionFunc) Run(vm *exec.VirtualMachine) int64 {
+func (r ExtensionFunc) Run(vm *VirtualMachine) int64 {
 	return r(vm)
 }
 
