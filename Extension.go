@@ -36,8 +36,9 @@ type Resolver struct {
 }
 
 // Register registers an extension
-func (r *Resolver) Register(name string, e Extension) {
+func (r *Resolver) Register(name string, e Extension) bool {
 	r.Execers[name] = e
+	return true
 }
 
 // Resolve finds the extenstion that was registeredcd
