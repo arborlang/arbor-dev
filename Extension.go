@@ -18,6 +18,11 @@ func (r ExtensionFunc) Run(vm *exec.VirtualMachine) int64 {
 	return r(vm)
 }
 
+// Signature returns the wast signature of the function
+func (r ExtensionFunc) Signature() string {
+	return ""
+}
+
 // Module defines an API to add native go modules (or in c through cgo) to Arbor
 // As long as the module is in the path, this should load fine
 type Module interface {
@@ -39,6 +44,11 @@ type Resolver struct {
 func (r *Resolver) Register(name string, e Extension) bool {
 	r.Execers[name] = e
 	return true
+}
+
+// Import imports the module
+func (r *Resolver) Import() string {
+	return ""
 }
 
 // Resolve finds the extenstion that was registeredcd
