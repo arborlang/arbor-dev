@@ -7,6 +7,7 @@ import (
 // Extension is an Extension that runs in go (or via cgo). You can use this to define native behavior
 type Extension interface {
 	Run(*exec.VirtualMachine) int64
+	Signature() string
 }
 
 // ExtensionFunc are simple functions that implements a module behaviour
@@ -24,6 +25,8 @@ type Module interface {
 	Resolve(string) Extension
 	// Name gets the name of the module
 	Name() string
+	// Import returns the string for the import section in arbor
+	Import() string
 }
 
 // Resolver is an implementation of the Module interface
