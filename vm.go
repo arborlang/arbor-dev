@@ -99,6 +99,7 @@ func (v *VM) ResolveFunc(module, field string) exec.FunctionImport {
 		}
 	}
 	mod, ok := v.resolvers[module]
+	fmt.Println(mod)
 	if !ok {
 		panic(fmt.Errorf("unknown import resolved: %s", module))
 	}
