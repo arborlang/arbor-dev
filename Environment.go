@@ -53,8 +53,8 @@ func maybeLoadCacheFile(fileName string) ([]byte, bool, error) {
 }
 
 // RunWasm runs a Wasm file
-func RunWasm(wasmCode []byte, entrypoint string) (int64, error) {
-	vm, err := NewVirtualMachine(wasmCode, entrypoint)
+func RunWasm(wasmCode []byte, entrypoint string, extensions ...string) (int64, error) {
+	vm, err := NewVirtualMachine(wasmCode, entrypoint, extensions...)
 	if err != nil {
 		return int64(-1), err
 	}

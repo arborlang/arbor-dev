@@ -2,8 +2,9 @@ package arbor
 
 import (
 	"fmt"
-	"github.com/perlin-network/life/exec"
 	"plugin"
+
+	"github.com/perlin-network/life/exec"
 )
 
 //VM is the arbor virtual machine
@@ -21,7 +22,9 @@ type VM struct {
 func NewVirtualMachine(wasmCode []byte, entrypoint string, paths ...string) (*VM, error) {
 	realVM := new(VM)
 	realVM.resolvers = make(map[string]Module)
-	realVM.LoadModules(paths...)
+	if err := realVM.LoadModules(paths...); err != nil {
+		return nil, err
+	}
 	vm, err := exec.NewVirtualMachine(wasmCode, exec.VMConfig{}, realVM, nil)
 	if err != nil {
 		return nil, err
@@ -68,6 +71,7 @@ func (v *VM) Load(path string) error {
 		return err
 	}
 	if module, ok := resolver.(Module); ok {
+		fmt.Println("Module has been loaded!")
 		v.resolvers[module.Name()] = module
 		return nil
 	}
@@ -97,10 +101,10 @@ func (v *VM) StackPop(_ *exec.VirtualMachine) int64 {
 //ResolveFunc finds the function you are looking for
 func (v *VM) ResolveFunc(module, field string) exec.FunctionImport {
 	if module == "env" {
-		if field == "__stackpop__" {
+		if field == "__popstack__" {
 			return v.StackPop
 		}
-		if field == "__stackpush__" {
+		if field == "__pushstack__" {
 			return v.StackPush
 		}
 	}
