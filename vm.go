@@ -31,6 +31,20 @@ func NewVirtualMachine(wasmCode []byte, entrypoint string) (*VM, error) {
 	return realVM, nil
 }
 
+// Run runs the virtual machine
+func (v *VM) Run() (int64, error) {
+	ret, err := v.Life.Run(v.entryID)
+	if err != nil {
+		return int64(-1), err
+	}
+	return ret, nil
+}
+
+// PrintStackTrace prints the stack Trace
+func (v *VM) PrintStackTrace() {
+	v.Life.PrintStackTrace()
+}
+
 // StackPush pushes a stack pointer down
 func (v *VM) StackPush(_ *exec.VirtualMachine) int64 {
 	v.CallStack = append(v.CallStack, v.StackTop)
