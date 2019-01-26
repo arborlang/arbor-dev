@@ -46,6 +46,7 @@ func (v *VM) Run() (int64, error) {
 
 // LoadModules loads a list of modules
 func (v *VM) LoadModules(paths ...string) error {
+	fmt.Println(paths)
 	for _, path := range paths {
 		if err := v.Load(path); err != nil {
 			return err
@@ -94,7 +95,6 @@ func (v *VM) StackPop(_ *exec.VirtualMachine) int64 {
 
 //ResolveFunc finds the function you are looking for
 func (v *VM) ResolveFunc(module, field string) exec.FunctionImport {
-	fmt.Println("HERE I AM!")
 	if module == "env" {
 		if field == "__stackpop__" {
 			return v.StackPop
