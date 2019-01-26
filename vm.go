@@ -7,7 +7,7 @@ import (
 
 //VM is the arbor virtual machine
 type VM struct {
-	vm        *exec.VirtualMachine
+	Life      *exec.VirtualMachine
 	passedVM  *exec.VirtualMachine
 	entryID   int
 	StackTop  int64
@@ -27,7 +27,7 @@ func NewVirtualMachine(wasmCode []byte, entrypoint string) (*VM, error) {
 		return nil, fmt.Errorf("entry function not found")
 	}
 	realVM.entryID = entryID
-	realVM.vm = vm
+	realVM.Life = vm
 	return realVM, nil
 }
 
