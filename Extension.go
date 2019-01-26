@@ -1,20 +1,16 @@
 package arbor
 
-import (
-	"github.com/perlin-network/life/exec"
-)
-
 // Extension is an Extension that runs in go (or via cgo). You can use this to define native behavior
 type Extension interface {
-	Run(*exec.VirtualMachine) int64
+	Run(*VM) int64
 	Signature() string
 }
 
 // ExtensionFunc are simple functions that implements a module behaviour
-type ExtensionFunc func(vm *exec.VirtualMachine) int64
+type ExtensionFunc func(vm *VM) int64
 
 // Run implements the resolver
-func (r ExtensionFunc) Run(vm *exec.VirtualMachine) int64 {
+func (r ExtensionFunc) Run(vm *VM) int64 {
 	return r(vm)
 }
 
