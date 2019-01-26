@@ -18,8 +18,9 @@ type VM struct {
 }
 
 // NewVirtualMachine returns a new arbor VirtualMachine
-func NewVirtualMachine(wasmCode []byte, entrypoint string) (*VM, error) {
+func NewVirtualMachine(wasmCode []byte, entrypoint string, paths ...string) (*VM, error) {
 	realVM := new(VM)
+	realVM.LoadModules(paths...)
 	vm, err := exec.NewVirtualMachine(wasmCode, exec.VMConfig{}, realVM, nil)
 	if err != nil {
 		return nil, err
