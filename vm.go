@@ -3,6 +3,7 @@ package arbor
 import (
 	"fmt"
 	"github.com/perlin-network/life/exec"
+	"plugin"
 )
 
 //VM is the arbor virtual machine
@@ -38,6 +39,33 @@ func (v *VM) Run() (int64, error) {
 		return int64(-1), err
 	}
 	return ret, nil
+}
+
+// LoadModules loads a list of modules
+func (v *VM) LoadModules(paths ...string) error {
+	for _, path := range paths {
+		if err := v.Load(path); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// Load loads a module from a path
+func (v *VM) Load(path string) error {
+	plug, err := plugin.Open(path)
+	if err != nil {
+		return err
+	}
+	resolver, err := plug.Lookup("Env")
+	if err != nil {
+		return err
+	}
+	if module, ok := resolver.(Module); ok {
+		v.resolvers[module.Name()] = module
+		return nil
+	}
+	return fmt.Errorf("Could not open extentions")
 }
 
 // PrintStackTrace prints the stack Trace
