@@ -8,12 +8,13 @@ import (
 
 //VM is the arbor virtual machine
 type VM struct {
-	Life      *exec.VirtualMachine
-	passedVM  *exec.VirtualMachine
-	entryID   int
-	StackTop  int64
-	CallStack []int64
-	resolvers map[string]Module
+	Life       *exec.VirtualMachine
+	passedVM   *exec.VirtualMachine
+	entrypoint string
+	entryID    int
+	StackTop   int64
+	CallStack  []int64
+	resolvers  map[string]Module
 }
 
 // NewVirtualMachine returns a new arbor VirtualMachine
@@ -23,17 +24,19 @@ func NewVirtualMachine(wasmCode []byte, entrypoint string) (*VM, error) {
 	if err != nil {
 		return nil, err
 	}
-	entryID, ok := vm.GetFunctionExport(entrypoint) // can be changed to your own exported function
-	if !ok {
-		return nil, fmt.Errorf("entry function not found")
-	}
-	realVM.entryID = entryID
 	realVM.Life = vm
+	realVM.entrypoint = entrypoint
 	return realVM, nil
+
 }
 
 // Run runs the virtual machine
 func (v *VM) Run() (int64, error) {
+	entryID, ok := v.Life.GetFunctionExport(v.entrypoint) // can be changed to your own exported function
+	if !ok {
+		return int64(-1), fmt.Errorf("entry function not found")
+	}
+	v.entryID = entryID
 	ret, err := v.Life.Run(v.entryID)
 	if err != nil {
 		return int64(-1), err
