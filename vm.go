@@ -53,6 +53,7 @@ func (v *VM) LoadModules(paths ...string) error {
 
 // Load loads a module from a path
 func (v *VM) Load(path string) error {
+	fmt.Println("Loading a module", path)
 	plug, err := plugin.Open(path)
 	if err != nil {
 		return err
@@ -99,7 +100,7 @@ func (v *VM) ResolveFunc(module, field string) exec.FunctionImport {
 		}
 	}
 	mod, ok := v.resolvers[module]
-	fmt.Println(mod)
+	fmt.Println(v.resolvers)
 	if !ok {
 		panic(fmt.Errorf("unknown import resolved: %s", module))
 	}
