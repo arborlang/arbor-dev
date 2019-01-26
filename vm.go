@@ -20,6 +20,7 @@ type VM struct {
 // NewVirtualMachine returns a new arbor VirtualMachine
 func NewVirtualMachine(wasmCode []byte, entrypoint string, paths ...string) (*VM, error) {
 	realVM := new(VM)
+	realVM.resolvers = make(map[string]Module)
 	realVM.LoadModules(paths...)
 	vm, err := exec.NewVirtualMachine(wasmCode, exec.VMConfig{}, realVM, nil)
 	if err != nil {
@@ -47,7 +48,6 @@ func (v *VM) Run() (int64, error) {
 
 // LoadModules loads a list of modules
 func (v *VM) LoadModules(paths ...string) error {
-	fmt.Println(paths)
 	for _, path := range paths {
 		if err := v.Load(path); err != nil {
 			return err
