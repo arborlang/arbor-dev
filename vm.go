@@ -94,6 +94,7 @@ func (v *VM) StackPop(_ *exec.VirtualMachine) int64 {
 
 //ResolveFunc finds the function you are looking for
 func (v *VM) ResolveFunc(module, field string) exec.FunctionImport {
+	fmt.Println("HERE I AM!")
 	if module == "env" {
 		if field == "__stackpop__" {
 			return v.StackPop
