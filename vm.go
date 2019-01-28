@@ -80,7 +80,10 @@ func (v *VM) Load(path string) error {
 
 // PrintStackTrace prints the stack Trace
 func (v *VM) PrintStackTrace() {
+	fmt.Println("Stack Top:", v.StackTop, "MemoryMax:", v.Life.Config.MaxMemoryPages, "Memory Size:", len(v.Life.Memory))
+	fmt.Println("\tMax Call Stack:", v.Life.Memory[v.StackTop])
 	v.Life.PrintStackTrace()
+	fmt.Println(v.Life.StackTrace)
 }
 
 // StackPush pushes a stack pointer down
@@ -91,7 +94,13 @@ func (v *VM) StackPush(_ *exec.VirtualMachine) int64 {
 
 // IncrementStack adds values to the stack
 func (v *VM) IncrementStack(_ *exec.VirtualMachine) int64 {
+	fmt.Println("incrementing")
 	increment := v.Life.GetCurrentFrame().Locals[0]
+	fmt.Println("Executing access")
+	val := v.Life.Memory[v.StackTop : v.StackTop+4]
+	fmt.Println("done Executing access")
+	fmt.Println(val)
+	fmt.Println("done")
 	v.StackTop += increment
 	return v.StackTop
 }
@@ -101,8 +110,10 @@ func (v *VM) GetStackTop(_ *exec.VirtualMachine) int64 { return v.StackTop }
 
 // StackPop pops a call stack off
 func (v *VM) StackPop(_ *exec.VirtualMachine) int64 {
+	fmt.Println("Popping stack")
 	lastEntry := len(v.CallStack) - 1
 	newTop, newStack := v.CallStack[lastEntry], v.CallStack[:lastEntry]
+	fmt.Println("poping stack", v.StackTop, "->", newTop)
 	v.StackTop = newTop
 	v.CallStack = newStack
 	return v.StackTop
@@ -155,6 +166,7 @@ func (v *VM) ResolveGlobal(module, field string) int64 {
 
 func (v *VM) prepFunctionForExecution(ext Extension) exec.FunctionImport {
 	return func(vm *exec.VirtualMachine) int64 {
+		fmt.Println("Fucking peice of shit")
 		v.passedVM = vm
 		retVal := ext.Run(v)
 		v.passedVM = nil
